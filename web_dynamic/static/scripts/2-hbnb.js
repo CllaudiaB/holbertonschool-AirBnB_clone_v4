@@ -16,12 +16,11 @@ $(document).ready(function() {
   });
 });
 
-$(document).ready(function() {
-  $.get('http://0.0.0.0:5001/api/v1/status/', function(data, status) {
-      if (data.status === 'OK') {
-          $('#api_status').addClass('available');
-      } else {
-          $('#api_status').removeClass('available');
-      }
+const APIURL = 'http://0.0.0.0:5000/api/v1/status';
+  $.get(APIURL, function (data, response) {
+    if (response === 'success' && data.status === 'OK') {
+      $('DIV#api_status').addClass('available');
+    } else {
+      $('DIV#api_status').removeClass('available');
+    }
   });
-});
