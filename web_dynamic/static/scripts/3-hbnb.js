@@ -26,33 +26,38 @@ $(document).ready(function() {
   });
 });
 
-$(document).ready(function () {
-  const url = 'http://0.0.0.0:5001/api/v1/places_search/';
-  const data = {};
-  const options = {
-    type: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify(data),
-  };
-  $.ajax(url, options).done(function (places) {
-    $.each(places, function (index, place) {
-      const article = [
-        '<article>',
-        '<div class="title_box">',
-        '<h2>' + place.name + '</h2>',
-        '<div class="price_by_night">$' + place.price_by_night + '</div>',
-        '</div>',
-        '<div class="information">',
-        '<div class="max_guest">' + place.max_guest + ' Guest' + (place.max_guest !== 1 ? 's' : '') + '</div>',
-        '<div class="number_rooms">' + place.number_rooms + ' Bedroom' + (place.number_rooms !== 1 ? 's' : '') + '</div>',
-        '<div class="number_bathrooms">' + place.number_bathrooms + ' Bathroom' + (place.number_bathrooms !== 1 ? 's' : '') + '</div>',
-        '</div>',
-        '<div class="description">',
-        place.description,
-        '</div>',
-        '</article>',
-      ].join('\n');
-      $('section.places').append(article);
-    });
-  });
+$.ajax({
+  url: 'http://0.0.0.0:5001/api/v1/places_search/',
+  type: 'POST',
+  data: {},
+  contentType: 'application/json',
+  dataType: 'json',
+  success: function (data) {
+    for (let i = 0; i < data.length; i++) {
+      $('section.places').append(addPlace(data[i]));
+    }
+  }
 });
+
+function addPlace (place) {
+  return `
+    <article>
+    <h2>${place.name}</h2>
+    <div class="title_box">
+    <div class="price_by_night">$${place.price_by_night}
+    </div>
+    </div>
+    <div class="information">
+    <div class="max_guest">
+    ${place.max_guest} Guest
+    </div>
+    <div class="number_rooms">${place.number_rooms} Bedroom
+    </div>
+    <div class="number_bathrooms">${place.number_bathrooms} Bathroom
+    </div>
+    </div>
+    <div class="description">${place.description}
+    </div>
+    </article>
+    `;
+}
